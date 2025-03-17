@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from './components/ui/button'
+
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import SignUpForm from './auth/forms/SignUpForm'
@@ -8,10 +8,13 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Dashboard from './pages/Dashboard'
 import Newsarticle from './pages/NewsArticle'
+import Header from './components/shared/Header'
 
 const App = () => {
   return (
+    
    <BrowserRouter>
+   <Header/>
    <Routes>
     <Route path='/sign-up' element={<SignUpForm/>}/>
     <Route path='/sign-in' element={< SignInForm/>}/>
