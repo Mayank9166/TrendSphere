@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import { Button } from '../ui/button';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/TrendSphere.png';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className='flex items-center justify-between p-4 shadow-xl bg-white'>
+    <nav className='flex items-center justify-between p-4 shadow-xl sticky top-0 bg-white'>
       {/* Logo Section */}
       <div className='flex items-center gap-2'>
         <img src={logo} alt="Logo" className='w-[50px] h-[50px] object-cover' />
@@ -23,10 +23,12 @@ const Header = () => {
       </ul>
 
       {/* Search Box */}
-      <div className='hidden md:flex bg-gray-300 p-2 rounded-lg items-center'>
+     
+        <form action="" className='hidden md:flex bg-gray-300 p-2 rounded-lg items-center'>
         <input type="text" placeholder='Search...' className='focus:outline-none w-[220px] bg-transparent' />
-        <FaSearch className='text-xl text-gray-600' />
-      </div>
+         <FaSearch className='text-xl text-gray-600' />
+        </form>
+      
 
       {/* Sign-In Button */}
       <Button className="hidden md:flex">
