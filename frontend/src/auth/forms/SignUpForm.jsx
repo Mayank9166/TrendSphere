@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from '../../assets/TrendSphere.png';
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 import {
   Form,
   FormControl,
@@ -14,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const formSchema = z.object({
   username: z.string().min(2, { message: "Username must be at least 2 characters" }),
   email: z.string().email({ message: "Invalid email address" }),
@@ -29,9 +30,37 @@ const SignUpForm = () => {
       password:"",
     },
   })
-  function onSubmit(values) {
-   
-    console.log(values)
+   const [loading, setloading] = useState(false)
+   const [errorMessage, seterrorMessage] = useState(null)
+   const navigate = useNavigate();
+
+  async function onSubmit(values) {
+    try {
+      setloading(true)
+      seterrorMessage(null)
+      const res = await fetch("/api/auth/signup",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(values)
+      })
+      const data = await res.json();
+      if(data.success === false)
+      {
+        setloading(false)
+        toast("This username or email is already taken. Try another")
+       return  seterrorMessage(data.message)
+      }
+      if(res.ok)
+      {
+        setloading(false)
+        toast("Sigup Successfully")
+        navigate("/sign-in")
+      }
+    } catch (error) {
+      seterrorMessage(error.message);
+      setloading(false);
+      toast("Something went wrong");
+    }
     form.reset();
   }
   return (
@@ -91,13 +120,16 @@ const SignUpForm = () => {
           </FormItem>
         )}
       />
-      <Button className="w-full  hover:bg-blue-900" type="submit">SignUp</Button>
+      <Button className="w-full  hover:bg-blue-900" type="submit" disabled={loading}>
+        {loading?(<span className='animate-pulse'>Loading...</span>):(<span>Signup</span>)}
+      </Button>
     </form>
   </Form>
   <div className='mt-3'>
     <span className=''>Have a account?</span>
     <span className='text-blue-400 ml-2'><Link to={"/sign-in"}>Sign In</Link></span>
   </div>
+      
 </div>
       
       </div>

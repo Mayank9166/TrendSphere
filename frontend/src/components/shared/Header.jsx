@@ -54,8 +54,8 @@ const Header = () => {
           </div> */}
 
           {/* Sign-In Button */}
-          <Button className="w-3/4">
-            <Link to={'/sign-in'}>Sign In</Link>
+          <Button onClick={() => setIsOpen(false)} className="w-3/4">
+            <Link to={'/sign-in'} >Sign In</Link>
           </Button>
         </div>
       )}

@@ -9,6 +9,7 @@ import About from './pages/About'
 import Dashboard from './pages/Dashboard'
 import Newsarticle from './pages/NewsArticle'
 import Header from './components/shared/Header'
+import { Toaster } from './components/ui/sonner.jsx'
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
 
 
    </Routes>
+   <Toaster/>
    </BrowserRouter>
   )
 }
