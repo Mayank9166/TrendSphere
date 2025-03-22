@@ -16,12 +16,15 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInFailure, signInstart, signInSuccess } from '@/redux/user/userSlice';
 const formSchema = z.object({
  
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(8, { message: "Password must be at least 8 characters" }),
 });
 const SignInForm = () => {
+  
   const form = useForm({
      resolver: zodResolver(formSchema),
      defaultValues: {
@@ -30,14 +33,13 @@ const SignInForm = () => {
        password:"",
      },
    })
-    const [loading, setloading] = useState(false)
-    const [errorMessage, seterrorMessage] = useState(null)
-    const navigate = useNavigate();
  
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { loading,error:errorMessage }= useSelector((state)=>state.user)
    async function onSubmit(values) {
      try {
-       setloading(true)
-       seterrorMessage(null)
+       dispatch(signInstart())
        const res = await fetch("/api/auth/signin",{
          method:"POST",
          headers:{"Content-Type":"application/json"},
@@ -46,19 +48,18 @@ const SignInForm = () => {
        const data = await res.json();
        if(data.success === false)
        {
-         setloading(false)
+        
          toast("SignIn Failed")
-        return  seterrorMessage(data.message)
+        return dispatch(signInFailure(data.message))
        }
        if(res.ok)
        {
-         setloading(false)
+          dispatch(signInSuccess(data));
          toast("SignIn Successfully")
          navigate("/")
        }
      } catch (error) {
-       seterrorMessage(error.message);
-       setloading(false);
+      dispatch(signInFailure(error.message));
        toast("Something went wrong");
      }
      form.reset();
@@ -117,7 +118,9 @@ const SignInForm = () => {
      <span className=''>Don't have a account?</span>
      <span className='text-blue-400 ml-2'><Link to={"/sign-up"}>Sign up</Link></span>
    </div>
-       
+       {errorMessage && (<p className='text-red-400'>
+        {errorMessage}
+       </p>)}
  </div>
        
        </div>
