@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from 'react-router-dom';
+import GoogleAuth from '@/components/shared/GoogleAuth';
 const formSchema = z.object({
   username: z.string().min(2, { message: "Username must be at least 2 characters" }),
   email: z.string().email({ message: "Invalid email address" }),
@@ -120,9 +121,10 @@ const SignUpForm = () => {
           </FormItem>
         )}
       />
-      <Button className="w-full  hover:bg-blue-900" type="submit" disabled={loading}>
+      <Button className="w-full  hover:bg-blue-900 cursor-pointer" type="submit" disabled={loading}>
         {loading?(<span className='animate-pulse'>Loading...</span>):(<span>Signup</span>)}
       </Button>
+      <GoogleAuth/>
     </form>
   </Form>
   <div className='mt-3'>

@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
         required:true,
         
     },
+    profilePhotoUrl:{
+        type:String,
+        default:"https://www.flaticon.com/free-icon/user_1077114"
+    },
 },{timestamps:true})
  
 const User = mongoose.model("User",userSchema)
