@@ -1,10 +1,11 @@
 import React from 'react'
 import { Button } from '../ui/button'
-import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
+import {getAuth, GoogleAuthProvider,  signInWithPopup} from 'firebase/auth'
 import { app } from '@/firebase'
 import { useDispatch } from 'react-redux'
 import {  signInSuccess } from '@/redux/user/userSlice'
 import { useNavigate } from 'react-router-dom'
+
 const GoogleAuth = () => {
   const auth = getAuth(app)
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const GoogleAuth = () => {
          dispatch(signInSuccess(data));
          navigate("/");
        }
+       
        
    } catch (error) {
      console.log(error)
