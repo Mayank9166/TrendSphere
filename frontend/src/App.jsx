@@ -11,6 +11,7 @@ import Newsarticle from './pages/NewsArticle'
 import Header from './components/shared/Header'
 import { Toaster } from './components/ui/sonner.jsx'
 import Footer from './components/shared/Footer.jsx'
+import PrivateRoute from './components/shared/PrivateRoute.jsx'
 
 const App = () => {
   return (
@@ -22,8 +23,9 @@ const App = () => {
     <Route path='/sign-in' element={< SignInForm/>}/>
     <Route path='/' element={<Home/>}/>
     <Route path='/about' element={<About/>}/>
+    <Route element={<PrivateRoute/>}>N
     <Route path='/dashboard' element={<Dashboard/>}/>
-    <Route path='/dashboard' element={<Dashboard/>}/>
+    </Route>
     <Route path='/news' element={<Newsarticle/>}/>
 
 
