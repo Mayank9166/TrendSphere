@@ -24,7 +24,7 @@ const Dashboard = () => {
         </div>
         < BottomNavBar/>
         {/* profile */}
-        <div>
+        <div className='w-full'>
           {tab === "profile" && <div><DashboardProfile/></div>} 
         </div>
 
