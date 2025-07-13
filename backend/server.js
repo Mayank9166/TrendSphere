@@ -4,7 +4,9 @@ import 'dotenv/config'
 import authRoutes from './routes/authRoute.js'
 import userRoutes from './routes/user.route.js'
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 const app = express()
+app.use(cors());
 app.use(express.json())
 mongoose.connect(process.env.MONGO_URI).then(()=>{
     console.log("Database is connected successFully");

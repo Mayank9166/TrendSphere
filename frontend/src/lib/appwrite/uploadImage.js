@@ -1,14 +1,19 @@
+import { ID } from "appwrite";
+import { appwriteConfig, storage } from "./config";
 
-import ImageGravity from 'appwrite';
+// import { ImageGravity } from "appwrite";
 export async function uploadFile(file){
+    // console.log("Uploading file:", file);
+    // console.log(appwriteConfig);
     try {
         const uploadedFile  = await storage.createFile(
             appwriteConfig.storageId, // Storage ID
-            ID .unique(), // Unique ID for the file
+             ID.unique(), // // Unique ID for the file
             file
         );
+        console.log("File uploaded yes:", uploadedFile);
         return uploadedFile;
-
+   
 
         
     } catch (error) {
@@ -23,7 +28,7 @@ export function getFilePreview(fileId){
             fileId, // File ID
             2000,// Expiration time in seconds (optional)
             2000,
-            ImageGravity.top(),
+            'center',
             100
         );
         if(fileUrl === null){
