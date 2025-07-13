@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { getFilePreview, uploadFile } from '@/lib/appwrite/uploadImage';
-import { updateStart, updateSuccess, updateFailure, deleteUserStart,deleteUserFailure,deleteUserSuccess } from '@/redux/user/userSlice';
+import { updateStart, updateSuccess, updateFailure, deleteUserStart,deleteUserFailure,deleteUserSuccess, signoutSuccess } from '@/redux/user/userSlice';
 import { toast } from 'sonner'; // ✅ Import toast from sonner
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
 
@@ -100,7 +100,24 @@ const DashboardProfile = () => {
       toast.error("Update failed. Please try again.");
     }
   };
-
+  const handleSignout = async () => {
+    try {
+      const res = await fetch('/api/user/signout', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      console.log("Signout response:", data);
+      if (!res.ok) {
+        console.error("Signout failed:", data.message);
+      }
+      else{
+        dispatch(signoutSuccess());
+      }
+    }
+      catch (error) {
+        console.error("Error signing out:", error);
+      }
+    }
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
       <h1 className="my-7 text-center font-semibold text-3xl">Update Your Profile</h1>
@@ -155,10 +172,11 @@ const DashboardProfile = () => {
 
         </AlertDialog>
       
-        <Button variant = "ghost" className="cursor-pointer">Sign Out</Button>
+        <Button variant = "ghost" className="cursor-pointer" onClick = {handleSignout}>Sign Out</Button>
 
       </div>
-    </div>
+    </div>  
+
   );
 };
 

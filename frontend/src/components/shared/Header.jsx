@@ -4,6 +4,7 @@ import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import { Button } from '../ui/button';
 import logo from '../../assets/TrendSphere.png';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,10 +13,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { toast } from 'sonner';
+import { signoutSuccess } from '@/redux/user/userSlice';
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const handleSignout = async () => {
+     try {
+       const res = await fetch('/api/user/signout', {
+         method: 'POST',
+       });
+       const data = await res.json();
+       console.log("Signout response:", data);
+       if (!res.ok) {
+         console.error("Signout failed:", data.message);
+       }
+       else{
+         dispatch(signoutSuccess());
+      // Redirect to home page after signout
+       }
+     }
+       catch (error) {
+         console.error("Error signing out:", error);
+       }
+     };
 
   return (
     <nav className='flex items-center justify-between px-4 py-3 shadow-xl sticky top-0 bg-white z-50'>
@@ -54,7 +76,7 @@ const Header = () => {
             <DropdownMenuItem className="font-semibold text-sm cursor-pointer">
               <Link to={"/dashboard?tab=profile"}>Profile</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="font-semibold text-sm text-red-500 cursor-pointer">Sign Out</DropdownMenuItem>
+            <DropdownMenuItem className="font-semibold text-sm text-red-500 cursor-pointer" onClick = {handleSignout}>Sign Out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
