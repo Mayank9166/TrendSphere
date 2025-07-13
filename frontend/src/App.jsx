@@ -12,6 +12,8 @@ import Header from './components/shared/Header'
 import { Toaster } from './components/ui/sonner.jsx'
 import Footer from './components/shared/Footer.jsx'
 import PrivateRoute from './components/shared/PrivateRoute.jsx'
+import Createpost from './pages/Createpost.jsx'
+import AdminPrivateRoute from './components/shared/AdminPrivateRoute.jsx'
 
 const App = () => {
   return (
@@ -23,8 +25,11 @@ const App = () => {
     <Route path='/sign-in' element={< SignInForm/>}/>
     <Route path='/' element={<Home/>}/>
     <Route path='/about' element={<About/>}/>
-    <Route element={<PrivateRoute/>}>N
+    <Route element={<PrivateRoute/>}>
     <Route path='/dashboard' element={<Dashboard/>}/>
+    </Route>
+    <Route element={<AdminPrivateRoute/>}>
+    <Route path='/create-post' element={<Createpost/>}/>
     </Route>
     <Route path='/news' element={<Newsarticle/>}/>
 

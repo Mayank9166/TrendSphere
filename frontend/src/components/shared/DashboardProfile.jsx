@@ -10,7 +10,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 
 
 const DashboardProfile = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = React.useState(null);
   const [imageFileUrl, setImageFileUrl] = React.useState(currentUser.profilePhotoUrl);
   const [formData, setFormData] = React.useState({});
@@ -144,7 +144,9 @@ const DashboardProfile = () => {
         <Input id="email" type="email" placeholder="Email" defaultValue={currentUser.email} onChange={handleChange} />
         <Input id="password" type="password" placeholder="Password" onChange={handleChange} />
 
-        <Button type="submit" className="h-12 bg-green-600">Update Profile</Button>
+        <Button type="submit" disabled ={loading} className="h-12 bg-green-600">
+          {loading?"Loading...":"Update Profile"}
+          </Button>
       </form>
 
       <div className="text-red-500 flex justify-between mt-5 cursor-pointer">
