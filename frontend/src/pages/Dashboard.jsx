@@ -1,4 +1,5 @@
 import BottomNavBar from '@/components/shared/BottomNavBar';
+import DashboardPosts from '@/components/shared/DashboardPosts';
 import DashboardProfile from '@/components/shared/DashboardProfile';
 import DashboardSidebar from '@/components/shared/DashboardSidebar'
 import React, { useState,useEffect } from 'react'
@@ -26,9 +27,10 @@ const Dashboard = () => {
         {/* profile */}
         <div className='w-full'>
           {tab === "profile" && <div><DashboardProfile/></div>} 
+          {tab === "posts" && <div><DashboardPosts/></div>} 
         </div>
 
-    </div>
+    </div> 
   )
 }
 

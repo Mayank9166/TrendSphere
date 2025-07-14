@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FaSignOutAlt, FaUserAlt } from "react-icons/fa";
-import { IoIosCreate } from "react-icons/io";
+import { IoIosCreate, IoIosDocument } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { signoutSuccess } from '@/redux/user/userSlice';
 
@@ -46,6 +46,14 @@ const DashboardSidebar = () => {
             <Link to={"/create-post"} className='flex items-center p-2 hover:bg-slate-300 rounded cursor-pointer'>
              <IoIosCreate className='mr-3' />
               <span className='mr-3'>Create Post</span>
+            </Link> 
+          </li>
+          )}
+          { currentUser && currentUser.isAdmin && (
+          <li>
+            <Link to={"/dashboard?tab=posts"} className='flex items-center p-2 hover:bg-slate-300 rounded cursor-pointer'>
+             <IoIosDocument className='mr-3' />
+              <span className='mr-3'>Your articles</span>
             </Link> 
           </li>
           )}
