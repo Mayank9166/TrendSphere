@@ -2,11 +2,13 @@ import React, { use, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Link } from 'react-router-dom';
+import { set } from 'zod';
 
 
 const DashboardPosts = () => {
   const {currentUser} = useSelector((state)=>state.user);
   const [userPosts, setUserPosts] = React.useState([]);
+  const [showMore, setShowMore] = React.useState(true);
   console.log("User Posts:", userPosts);
    useEffect(() => {
     const fetchPosts = async () => {
@@ -16,7 +18,10 @@ const DashboardPosts = () => {
         if(res.ok)
         {
           setUserPosts(data.posts);
-
+           if(data.posts.length < 9)
+          {
+            setShowMore(false);
+          }
         }
       } catch (error) {
         console.error('Error fetching posts:', error)
@@ -27,6 +32,23 @@ const DashboardPosts = () => {
       fetchPosts();
     }
    },[currentUser._id])
+   const handleShowMore =  async () => {
+    const startIndex = userPosts.length;
+    try {
+      const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`);
+      // console.log("Response:", res);
+      const data = await res.json();
+      if(res.ok){
+        setUserPosts((prev)=>[...prev,...data.posts]);
+        if(data.posts.length < 2)
+        {
+          setShowMore(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching more posts:', error);
+    }
+   }
   return (
     <div className='flex flex-col items-center justify-center w-full p-3'>
      {currentUser.isAdmin && userPosts.length > 0 ? (
@@ -81,6 +103,8 @@ const DashboardPosts = () => {
               </TableBody>
          ))}
        </Table>
+       {showMore && (
+        <button onClick={handleShowMore} className="w-full text-blue-700 self-center text-sm py-7">Show more</button>)}
        </>
   )  :(<p>You have no posts yet</p>)
         }
