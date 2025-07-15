@@ -68,7 +68,18 @@ const DashboardUsers = () => {
     }
   };
     const handleDelete = async ()=>{
-console.log("Deleting the user")
+           try {
+            const res = await fetch(`/api/user/delete/${userIdtoDelete}`,{method:"DELETE"})
+              const data = await res.json();
+              if(res.ok)
+              {
+                setUsers((prev)=>prev.filter((user)=>user._id!==userIdtoDelete));
+              }
+              else
+                console.log(data.message);
+           } catch (error) {
+              console.log(error.message);
+           }
     }
   return (
     <div className="flex flex-col items-center justify-center w-full p-3">
