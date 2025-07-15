@@ -1,4 +1,4 @@
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   Table,
@@ -21,22 +21,23 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import { FaCheck } from "react-icons/fa";
 
-
-const DashboardPosts = () => {
+import { RxCross2 } from "react-icons/rx";
+const DashboardUsers = () => {
   const { currentUser } = useSelector((state) => state.user);
-  const [userPosts, setUserPosts] = React.useState([]);
+  const [users, setUsers] = React.useState([]);
   const [showMore, setShowMore] = React.useState(true);
-  const [postIdtoDelete, setPostIdToDelete] = React.useState("");
-  console.log("User Posts:", userPosts);
+  const [userIdtoDelete, setUserIdToDelete] = React.useState("");
+//   console.log("User Posts:", userPosts);
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchUsers = async () => {
       try {
-        const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
+        const res = await fetch(`/api/user/getusers`);
         const data = await res.json();
         if (res.ok) {
-          setUserPosts(data.posts);
-          if (data.posts.length < 9) {
+          setUsers(data.users);
+          if (data.users.length < 9) {
             setShowMore(false);
           }
         }
@@ -45,20 +46,20 @@ const DashboardPosts = () => {
       }
     };
     if (currentUser.isAdmin) {
-      fetchPosts();
+      fetchUsers();
     }
   }, [currentUser._id]);
   const handleShowMore = async () => {
-    const startIndex = userPosts.length;
+    const startIndex = users.length;
     try {
       const res = await fetch(
-        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `/api/user/getusers?startIndex=${startIndex}`
       );
       // console.log("Response:", res);
       const data = await res.json();
       if (res.ok) {
-        setUserPosts((prev) => [...prev, ...data.posts]);
-        if (data.posts.length < 9) {
+        setUsers((prev) => [...prev, ...data.users]);
+        if (data.users.length < 9) {
           setShowMore(false);
         }
       }
@@ -66,66 +67,54 @@ const DashboardPosts = () => {
       console.error("Error fetching more posts:", error);
     }
   };
-  const handleDelete = async () => {
-// console.log("Deleting post with ID:", postIdtoDelete);
-try {
-  const res = await fetch(`api/post/deletepost/${postIdtoDelete}/${currentUser._id}`,{
-    method:"DELETE"
-  })
-  const data = res.json();
-  if(!res.ok)
-  {
-    console.log(data.message);
-  }
-  else{
-    setUserPosts((prev)=>prev.filter((post)=>post._id !==postIdtoDelete))
-  }
-} catch (error) {
-  console.log(error.message);
-}
-  };
+    const handleDelete = async ()=>{
+console.log("Deleting the user")
+    }
   return (
     <div className="flex flex-col items-center justify-center w-full p-3">
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+      {currentUser.isAdmin && users.length > 0 ? (
         <>
           <Table >
-            <TableCaption>A list of your published articles.</TableCaption>
+            <TableCaption>A list of your recent subscribers.</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[200px]">Date Updated</TableHead>
-                <TableHead>Post Image</TableHead>
-                <TableHead>Post Title</TableHead>
-                <TableHead>Category</TableHead>
+                <TableHead className="w-[200px]">Joined On</TableHead>
+                <TableHead>User Image</TableHead>
+                <TableHead>Username</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Admin</TableHead>
                 <TableHead>Delete</TableHead>
-                <TableHead>Edit</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="divide-y">
-            {userPosts.map((post) => (
-                <TableRow key={post._id}  >
+            {users.map((user) => (
+                <TableRow key={user._id}  >
                   <TableCell>
-                    {new Date(post.updatedAt).toLocaleDateString()}
+                    {new Date(user.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell>
-                    <Link to={`/post/${post.slug}`}>
+                  
                       <img
-                        src={post.image}
-                        alt={post.title}
-                        className="w-20 h-20 object-cover bg-gray-500"
+                        src={user.profilePhotoUrl}
+                        alt={user.username}
+                        className="w-10 h-10 object-cover bg-gray-500 rounded-full"
                       />
-                    </Link>
+                   
                   </TableCell>
                   <TableCell>
-                    <Link to={`/post/${post.slug}`}>{post.title}</Link>
+                  {user.username}
                   </TableCell>
                   <TableCell>
-                    <Link>{post.category}</Link>
+                    <Link>{user.email}</Link>
                   </TableCell>
+                    <TableCell>
+                            {user.isAdmin? (<FaCheck className="text-green-600"/>): (<RxCross2 className="text-red-600" />)}         
+                       </TableCell>
                   <TableCell>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <span  onClick = {()=>{
-                          setPostIdToDelete(post._id);
+                          setUserIdToDelete(user._id);
                         }}className="cursor-pointer font-medicum text-red-600 hover:underline">
                          Delete
                         </span>
@@ -155,14 +144,7 @@ try {
                       </AlertDialogContent>
                     </AlertDialog>
                   </TableCell>
-                  <TableCell>
-                    <Link
-                      to={`/update-post/${post._id}`}
-                      className="font-medium text-green-600 hover:underline cursor-pointer"
-                    >
-                      <span>Edit</span>
-                    </Link>
-                  </TableCell>
+                
                 </TableRow>
             ))}
             </TableBody>
@@ -177,10 +159,10 @@ try {
           )}
         </>
       ) : (
-        <p>You have no posts yet</p>
+        <p>You have no subscribers yet</p>
       )}
     </div>
   );
 };
 
-export default DashboardPosts;
+export default DashboardUsers;
