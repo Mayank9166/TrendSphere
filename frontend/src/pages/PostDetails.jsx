@@ -1,3 +1,4 @@
+import Advertise from '@/components/shared/Advertise';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import React, { useEffect, useState } from 'react'
@@ -58,8 +59,11 @@ const PostDetails = () => {
         </div>
         <Separator className="bg-slate-500"/>
         <div className="p-3 max-w-3xl mx-auto w-full post-content" dangerouslySetInnerHTML={{__html:post && post.content}}>{
-           
+        
 }</div>
+<div className='max-w-4xl mx-auto w-full'>
+    <Advertise/>
+</div>
     </main>
   )
 }

@@ -16,12 +16,14 @@ import Createpost from './pages/Createpost.jsx'
 import AdminPrivateRoute from './components/shared/AdminPrivateRoute.jsx'
 import EditPost from './pages/EditPost.jsx'
 import PostDetails from './pages/PostDetails.jsx'
+import ScrollToTop from './components/shared/ScrollToTop.jsx'
 
 const App = () => {
   return (
     
    <BrowserRouter>
    <Header/>
+   <ScrollToTop/>
    <Routes>
     <Route path='/sign-up' element={<SignUpForm/>}/>
     <Route path='/sign-in' element={< SignInForm/>}/>
