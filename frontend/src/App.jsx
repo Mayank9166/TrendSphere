@@ -15,6 +15,7 @@ import PrivateRoute from './components/shared/PrivateRoute.jsx'
 import Createpost from './pages/Createpost.jsx'
 import AdminPrivateRoute from './components/shared/AdminPrivateRoute.jsx'
 import EditPost from './pages/EditPost.jsx'
+import PostDetails from './pages/PostDetails.jsx'
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
     <Route path='/update-post/:postId' element={<EditPost/>}/>
     </Route>
     <Route path='/news' element={<Newsarticle/>}/>
+    <Route path='/post/:postSlug' element={<PostDetails/>}/>
 
 
    </Routes>
