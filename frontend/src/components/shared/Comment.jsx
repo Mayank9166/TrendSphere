@@ -4,8 +4,9 @@ import { useSelector } from 'react-redux';
 import { AiFillLike } from 'react-icons/ai';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
 
-const Comment = ({ comment, onLike, onEdit }) => {
+const Comment = ({ comment, onLike, onEdit,onDelete }) => {
   const [user, setUser] = useState({});
   const { currentUser } = useSelector((state) => state.user);
   const [isEditing, setIsEditing] = useState(false);
@@ -38,9 +39,9 @@ const Comment = ({ comment, onLike, onEdit }) => {
 
       if (res.ok) {
         setIsEditing(false);
-        if (typeof onEdit === 'function') {
+       
           onEdit(comment, editedContent);
-        }
+        
       }
     } catch (error) {
       console.log(error.message);
@@ -115,13 +116,39 @@ const Comment = ({ comment, onLike, onEdit }) => {
               {currentUser &&
                 (currentUser._id === comment.userId ||
                   currentUser.isAdmin) && (
-                  <button
+                 <> <button
                     type='button'
                     onClick={() => setIsEditing(true)}
                     className='text-gray-400 hover:text-green-600'
                   >
                     Edit
                   </button>
+                          <AlertDialog>
+          <AlertDialogTrigger asChild>
+              <span className='text-gray-400 hover:text-red-600 cursor-pointer'>Delete</span>
+          </AlertDialogTrigger>
+       
+  
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+
+      <AlertDialogDescription>
+        This action cannot be undone. This will permanently delete your comment
+        and remove your data from our servers.
+      </AlertDialogDescription>
+       
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction className = "bg-red-600" onClick = {()=>onDelete(comment._id)}>Continue</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+
+        </AlertDialog>
+      
+                  </> 
+                  
                 )}
             </div>
           </>
