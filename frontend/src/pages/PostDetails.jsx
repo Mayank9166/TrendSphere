@@ -4,12 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
-
+import PostCard from '@/components/shared/PostCard';
 const PostDetails = () => {
     const {postSlug}= useParams();
     const [loading, setLoading]=useState(true);
     const [error, setError]=useState(false);
     const [post, setPost] = useState(null);
+    console.log("post",post);
+    const [recentArticles, setRecentArticles]=useState(null);
+    console.log(recentArticles);
     // console.log(post);
     useEffect(()=>{
         const fetchPost = async()=>{
@@ -36,6 +39,21 @@ const PostDetails = () => {
         }
         fetchPost();
     },[postSlug])
+    useEffect(()=>{
+         try {
+            const fetchRecentPost = async()=>{
+                const res = await fetch(`/api/post/getposts?limit=3`);
+                const data = await res.json();
+                if(res.ok)
+                {
+                    setRecentArticles(data.posts);
+                }
+            }
+            fetchRecentPost();
+         } catch (error) {
+            console.log(error.message);
+         }
+    },[]);
     if(loading){
         return (<div className='flex justify-center items-center min-h-screen'>
            <img src="https://cdn-icons-png.flaticon.com/128/25/25220.png" alt="loading"  className='w-20 animate-spin'/>
@@ -66,6 +84,14 @@ const PostDetails = () => {
     <Advertise/>
 </div>
   <CommentSection postId = {post._id}/> 
+  <div className='flex flex-col justify-center items-center mb-5' >
+    <h1 className='text-xl font-semibold mt-5 text-slate-700'>Recently published articles</h1>
+     <div className='flex flex-wrap gap-5 my-5 justify-center'>
+        {recentArticles && recentArticles.map((post)=>(
+            <PostCard key={post._id} post={post}/>
+        ))}
+     </div>
+  </div>
     </main>
   )
 }

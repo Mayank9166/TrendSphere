@@ -96,12 +96,15 @@ export const updatePost = async (req,res,next) =>
     return next(errorHandler(403,"You are not authorized to update this post!"))
    }
    try {
+      const slug = req.body.title.split(" ").join("-").toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
+      // console.log(req.body);
       const updatedPost = await Post.findByIdAndUpdate(req.params.postId,{
         $set:{
           title:req.body.title,
           content:req.body.content,
           category:req.body.category,
-          image:req.body.image
+          image:req.body.image,
+          slug
         }
       }
     ,{new:true})
