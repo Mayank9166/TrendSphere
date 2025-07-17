@@ -4,7 +4,7 @@ import { FaComments, FaSignOutAlt, FaUserAlt, FaUsers } from "react-icons/fa";
 import { IoIosCreate, IoIosDocument } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { signoutSuccess } from '@/redux/user/userSlice';
-
+import { MdDashboardCustomize } from "react-icons/md";
 const DashboardSidebar = () => {
    const dispatch = useDispatch();
     const {currentUser} = useSelector((state)=>state.user)
@@ -34,7 +34,17 @@ const DashboardSidebar = () => {
       </div>
       {/* Navigation */}
       <nav>
+        
         <ul className='flex-1 p-4'>
+           { currentUser && currentUser.isAdmin && (
+          <li>
+            <Link to={"/dashboard?tab=dashboard"} className='flex items-center p-2 hover:bg-slate-300 rounded cursor-pointer'>
+             
+             <MdDashboardCustomize className='mr-3' />
+              <span className='mr-3'>Dashboard</span>
+            </Link> 
+          </li>
+          )}
           <li>
             <Link to={"/dashboard?tab=profile"} className='flex items-center p-2 hover:bg-slate-300 rounded cursor-pointer'>
             <FaUserAlt className='mr-3' />
@@ -73,6 +83,7 @@ const DashboardSidebar = () => {
             </Link> 
           </li>
           )}
+
 
         </ul>
         <div className='p-4 border-t border-gray-700 '>
