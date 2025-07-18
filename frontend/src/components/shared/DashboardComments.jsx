@@ -33,7 +33,7 @@ const DashboardComments = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/api/comment/getcomments`);
+        const res = await fetch(`https://trendsphere-5.onrender.com/api/comment/getcomments`);
         const data = await res.json();
         if (res.ok) {
           setComments(data.comments);
@@ -53,7 +53,7 @@ const DashboardComments = () => {
     const startIndex = comments.length;
     try {
       const res = await fetch(
-        `/api/comments/getcomments?startIndex=${startIndex}`
+        `https://trendsphere-5.onrender.com/api/comments/getcomments?startIndex=${startIndex}`
       );
       // console.log("Response:", res);
       const data = await res.json();
@@ -69,7 +69,7 @@ const DashboardComments = () => {
   };
     const handleDeleteComment = async ()=>{
            try {
-            const res = await fetch(`/api/comment/deleteComment/${commentIdtoDelete}`,{method:"DELETE"})
+            const res = await fetch(`https://trendsphere-5.onrender.com/api/comment/deleteComment/${commentIdtoDelete}`,{method:"DELETE"})
               const data = await res.json();
               if(res.ok)
               {

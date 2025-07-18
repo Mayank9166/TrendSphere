@@ -33,7 +33,7 @@ const DashboardUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`/api/user/getusers`);
+        const res = await fetch(`https://trendsphere-5.onrender.com/api/user/getusers`);
         const data = await res.json();
         if (res.ok) {
           setUsers(data.users);
@@ -53,7 +53,7 @@ const DashboardUsers = () => {
     const startIndex = users.length;
     try {
       const res = await fetch(
-        `/api/user/getusers?startIndex=${startIndex}`
+        `https://trendsphere-5.onrender.com/api/user/getusers?startIndex=${startIndex}`
       );
       // console.log("Response:", res);
       const data = await res.json();
@@ -69,7 +69,7 @@ const DashboardUsers = () => {
   };
     const handleDelete = async ()=>{
            try {
-            const res = await fetch(`/api/user/delete/${userIdtoDelete}`,{method:"DELETE"})
+            const res = await fetch(`https://trendsphere-5.onrender.com/api/user/delete/${userIdtoDelete}`,{method:"DELETE"})
               const data = await res.json();
               if(res.ok)
               {

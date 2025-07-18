@@ -10,7 +10,7 @@ const DashboardSidebar = () => {
     const {currentUser} = useSelector((state)=>state.user)
     const handleSignout = async () => {
     try {
-      const res = await fetch('/api/user/signout', {
+      const res = await fetch('https://trendsphere-5.onrender.com/api/user/signout', {
         method: 'POST',
       });
       const data = await res.json();

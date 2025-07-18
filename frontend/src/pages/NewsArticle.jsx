@@ -46,7 +46,7 @@ const NewsArticle = () => {
         const fetchPosts = async ()=>{
             setLoading(true);
             const searchQuery = urlParams.toString();
-            const res = await fetch(`/api/post/getposts?${searchQuery}`);
+            const res = await fetch(`https://trendsphere-5.onrender.com/api/post/getposts?${searchQuery}`);
             if(!res.ok)
             {
                 setLoading(false);

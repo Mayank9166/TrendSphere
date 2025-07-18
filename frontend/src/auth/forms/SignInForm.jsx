@@ -38,33 +38,35 @@ const SignInForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { loading,error:errorMessage }= useSelector((state)=>state.user)
-   async function onSubmit(values) {
-     try {
-       dispatch(signInstart())
-       const res = await fetch("https://trendsphere-5.onrender.com/api/auth/signin",{
-         method:"POST",
-         headers:{"Content-Type":"application/json"},
-         body:JSON.stringify(values)
-       })
-       const data = await res.json();
-       if(data.success === false)
-       {
-        
-         toast("SignIn Failed")
-        return dispatch(signInFailure(data.message))
-       }
-       if(res.ok)
-       {
-          dispatch(signInSuccess(data));
-         toast("SignIn Successfully")
-         navigate("/")
-       }
-     } catch (error) {
-      dispatch(signInFailure(error.message));
-       toast("Something went wrong");
-     }
-     form.reset();
-   }
+ async function onSubmit(values) {
+  try {
+    dispatch(signInstart());
+
+    const res = await fetch("https://trendsphere-5.onrender.com/api/auth/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values)
+    });
+
+    const text = await res.text();
+    const data = text ? JSON.parse(text) : {};
+
+    if (!res.ok || data.success === false) {
+      toast("SignIn Failed");
+      return dispatch(signInFailure(data?.message || "SignIn failed"));
+    }
+
+    dispatch(signInSuccess(data.user)); // assuming your backend sends { success: true, user: {...} }
+    toast("SignIn Successfully");
+    navigate("/");
+  } catch (error) {
+    dispatch(signInFailure(error.message));
+    toast("Something went wrong");
+  }
+
+  form.reset();
+}
+
    return (
      <div className="min-h-screen mt-15 flex flex-col items-center ">
        <div className="w-full md:px-0 flex flex-col md:flex-row justify-evenly items-center">
