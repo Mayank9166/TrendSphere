@@ -18,6 +18,7 @@ import EditPost from './pages/EditPost.jsx'
 import PostDetails from './pages/PostDetails.jsx'
 import ScrollToTop from './components/shared/ScrollToTop.jsx'
 import Search from './pages/Search.jsx'
+import NewsArticle from './pages/NewsArticle'
 
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
     <Route path='/' element={<Home/>}/>
     <Route path='/about' element={<About/>}/>
     <Route path='/search' element={<Search/>}/>
+
     <Route element={<PrivateRoute/>}>
     <Route path='/dashboard' element={<Dashboard/>}/>
     </Route>
