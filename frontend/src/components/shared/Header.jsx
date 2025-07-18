@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import { Button } from '../ui/button';
 import logo from '../../assets/TrendSphere.png';
@@ -19,6 +19,18 @@ const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const [searchTerm,setSearchTerm]=useState("")
+  const navigate = useNavigate();
+  // console.log(searchTerm)
+  useEffect(()=>{
+     const urlParams = new URLSearchParams(location.search)
+     const searchTermFromUrl = urlParams.get("searchTerm")
+     if(searchTermFromUrl)
+     {
+      setSearchTerm(searchTermFromUrl);
+     }
+  },[location.search])
   const handleSignout = async () => {
      try {
        const res = await fetch('/api/user/signout', {
@@ -38,7 +50,13 @@ const Header = () => {
          console.error("Error signing out:", error);
        }
      };
-
+const handleSubmit = async(e)=>{
+e.preventDefault();
+const urlParams = new URLSearchParams(location.search);
+urlParams.set("searchTerm",searchTerm)
+const searchQuery = urlParams.toString();
+navigate(`/search?${searchQuery}`);
+}
   return (
     <nav className='flex items-center justify-between px-4 py-3 shadow-xl sticky top-0 bg-white z-50'>
       
@@ -56,9 +74,11 @@ const Header = () => {
       </ul>
 
       {/* Search Box */}
-      <form className='hidden md:flex bg-gray-300 px-3 py-1 rounded-lg items-center'>
-        <input type="text" placeholder='Search...' className='focus:outline-none w-[200px] bg-transparent text-sm' />
-        <FaSearch className='text-lg text-gray-600 ml-2' />
+      <form className='hidden md:flex bg-gray-300 px-3 py-1 rounded-lg items-center' onSubmit ={handleSubmit}>
+        <input type="text" placeholder='Search...' className='focus:outline-none w-[200px] bg-transparent text-sm' value={searchTerm} onChange={(e)=>{setSearchTerm(e.target.value)}}/>
+          <button type="submit">
+    <FaSearch className='text-lg text-gray-600 ml-2' />
+  </button>
       </form>
 
       {/* Profile / Sign In */}

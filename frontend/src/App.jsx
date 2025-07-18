@@ -17,6 +17,8 @@ import AdminPrivateRoute from './components/shared/AdminPrivateRoute.jsx'
 import EditPost from './pages/EditPost.jsx'
 import PostDetails from './pages/PostDetails.jsx'
 import ScrollToTop from './components/shared/ScrollToTop.jsx'
+import Search from './pages/Search.jsx'
+
 
 const App = () => {
   return (
@@ -29,6 +31,7 @@ const App = () => {
     <Route path='/sign-in' element={< SignInForm/>}/>
     <Route path='/' element={<Home/>}/>
     <Route path='/about' element={<About/>}/>
+    <Route path='/search' element={<Search/>}/>
     <Route element={<PrivateRoute/>}>
     <Route path='/dashboard' element={<Dashboard/>}/>
     </Route>
