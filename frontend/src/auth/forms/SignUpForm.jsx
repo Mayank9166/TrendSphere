@@ -39,7 +39,7 @@ const SignUpForm = () => {
     try {
       setloading(true)
       seterrorMessage(null)
-      const res = await fetch("/api/auth/signup",{
+      const res = await fetch("https://trendsphere-5.onrender.com/api/auth/signup",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify(values)

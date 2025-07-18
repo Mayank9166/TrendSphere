@@ -41,7 +41,7 @@ const SignInForm = () => {
    async function onSubmit(values) {
      try {
        dispatch(signInstart())
-       const res = await fetch("/api/auth/signin",{
+       const res = await fetch("https://trendsphere-5.onrender.com/api/auth/signin",{
          method:"POST",
          headers:{"Content-Type":"application/json"},
          body:JSON.stringify(values)
