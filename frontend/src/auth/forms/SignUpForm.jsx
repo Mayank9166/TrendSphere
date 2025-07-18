@@ -44,18 +44,7 @@ const SignUpForm = () => {
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify(values)
       })
-      // Check if response is JSON
-      const contentType = res.headers.get("content-type");
-      let data = null;
-      if (contentType && contentType.includes("application/json")) {
-        data = await res.json();
-      } else {
-        setloading(false);
-        seterrorMessage("Server error: Invalid response format");
-        toast("Server error: Invalid response format");
-        form.reset();
-        return;
-      }
+      const data = await res.json();
       if(data.success === false)
       {
         setloading(false)

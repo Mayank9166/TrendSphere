@@ -8,7 +8,7 @@ export default defineConfig({
   server:{
       proxy:{
         "/api":{
-          target:"https://trendsphere-2-qedq.onrender.com",
+          target:"http://localhost:3000",
         }
       }
   },
