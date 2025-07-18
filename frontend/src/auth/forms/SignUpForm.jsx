@@ -47,7 +47,7 @@ const SignUpForm = () => {
      
       if(res && data.success === false)
         {
-        const data = await res.json();
+        const data = await res.text();
         setloading(false)
         toast("This username or email is already taken. Try another")
        return  seterrorMessage(data.message)

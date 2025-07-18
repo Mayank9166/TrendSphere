@@ -105,6 +105,7 @@ const DashboardProfile = () => {
       const res = await fetch('https://trendsphere-5.onrender.com/api/user/signout', {
         method: 'POST',
       });
+      console.log(res);
       const data = await res.json();
       console.log("Signout response:", data);
       if (!res.ok) {

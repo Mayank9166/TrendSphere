@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://trendsphere-3.onrender.com",
+        target: "https://trendsphere-5.onrender.com",
         changeOrigin: true,
         secure: false, // ⬅️ This disables SSL verification in dev
       },

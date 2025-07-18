@@ -12,8 +12,8 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: [ "https://trend-sphere-p815xwb7f-mayank-sainis-projects-9cb29679.vercel.app/"],
-  credentials: true
+  origin: [ "https://classy-cranachan-b7b469.netlify.app/"],
+  
 }));
 app.use(express.json());
 app.use(cookieParser());

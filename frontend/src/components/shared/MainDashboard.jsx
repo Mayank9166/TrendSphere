@@ -32,7 +32,7 @@ const MainDashboard = () => {
     const fetchUsers = async () => {
       try {
         const res = await fetch("https://trendsphere-5.onrender.com/api/user/getusers?limit=5");
-        const data = await res.json();
+        const data = await res.text();
         if (res.ok) {
           setUsers(data.users);
           setTotalUsers(data.totalUsers);
@@ -61,6 +61,7 @@ const MainDashboard = () => {
       try {
         const res = await fetch(`https://trendsphere-5.onrender.com/api/comment/getcomments?limit=5`);
         const data = await res.json();
+        console.log(data);
         if (res.ok) {
           setComments(data.comments);
           setTotalComments(data.totalComments);
