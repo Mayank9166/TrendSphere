@@ -11,7 +11,10 @@ import cors from 'cors';
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [ "https://trend-sphere-p815xwb7f-mayank-sainis-projects-9cb29679.vercel.app/"],
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 
