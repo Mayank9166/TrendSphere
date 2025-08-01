@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
+import { apiFetch } from '@/config/api';
 
 
 const DashboardPosts = () => {
@@ -32,7 +33,7 @@ const DashboardPosts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`/api/post/getposts?userId=${currentUser._id}`);
+        const res = await apiFetch(`/api/post/getposts?userId=${currentUser._id}`);
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
@@ -51,7 +52,7 @@ const DashboardPosts = () => {
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
     try {
-      const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`);
+      const res = await apiFetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`);
       // console.log("Response:", res);
       const data = await res.json();
       if (res.ok) {
@@ -67,7 +68,7 @@ const DashboardPosts = () => {
   const handleDelete = async () => {
 // console.log("Deleting post with ID:", postIdtoDelete);
 try {
-  const res = await fetch(`https://trendsphere-3.onrender.com/api/post/deletepost/${postIdtoDelete}/${currentUser._id}`,{
+  const res = await apiFetch(`/api/post/deletepost/${postIdtoDelete}/${currentUser._id}`,{
     method:"DELETE"
   })
   const data = res.json();

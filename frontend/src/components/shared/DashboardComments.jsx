@@ -24,6 +24,7 @@ import {
 import { FaCheck } from "react-icons/fa";
 
 import { RxCross2 } from "react-icons/rx";
+import { apiFetch } from '@/config/api';
 const DashboardComments = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [comments, setComments] = React.useState([]);
@@ -33,8 +34,18 @@ const DashboardComments = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`https://trendsphere-3.onrender.com/api/comment/getcomments`);
+        console.log("Fetching comments for user:", currentUser);
+        const res = await apiFetch(`/api/comment/getcomments`);
+        console.log("Comments response status:", res.status);
+        
+        if (!res.ok) {
+          console.error("Failed to fetch comments:", res.status, res.statusText);
+          return;
+        }
+        
         const data = await res.json();
+        console.log("Comments data:", data);
+        
         if (res.ok) {
           setComments(data.comments);
           if (data.comments.length < 9) {
@@ -42,18 +53,20 @@ const DashboardComments = () => {
           }
         }
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error fetching comments:", error);
       }
     };
-    if (currentUser.isAdmin) {
+    if (currentUser && currentUser.isAdmin) {
       fetchComments();
+    } else {
+      console.log("User not admin or not logged in:", currentUser);
     }
-  }, [currentUser._id]);
+  }, [currentUser]);
   const handleShowMore = async () => {
     const startIndex = comments.length;
     try {
-      const res = await fetch(
-        `https://trendsphere-3.onrender.com/api/comments/getcomments?startIndex=${startIndex}`
+      const res = await apiFetch(
+        `/api/comment/getcomments?startIndex=${startIndex}`
       );
       // console.log("Response:", res);
       const data = await res.json();
@@ -69,7 +82,7 @@ const DashboardComments = () => {
   };
     const handleDeleteComment = async ()=>{
            try {
-            const res = await fetch(`https://trendsphere-3.onrender.com/api/comment/deleteComment/${commentIdtoDelete}`,{method:"DELETE"})
+            const res = await apiFetch(`/api/comment/deleteComment/${commentIdtoDelete}`,{method:"DELETE"})
               const data = await res.json();
               if(res.ok)
               {
