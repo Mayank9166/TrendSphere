@@ -6,6 +6,7 @@ import { getFilePreview, uploadFile } from '@/lib/appwrite/uploadImage';
 import { updateStart, updateSuccess, updateFailure, deleteUserStart,deleteUserFailure,deleteUserSuccess, signoutSuccess } from '@/redux/user/userSlice';
 import { toast } from 'sonner'; // ✅ Import toast from sonner
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
+import { apiFetch } from '@/config/api';
 
 
 
@@ -47,7 +48,7 @@ const DashboardProfile = () => {
   const handleDelete = async () => {
       try {
         dispatch(deleteUserStart());
-        const res = await fetch(`https://trendsphere-5.onrender.com/api/user/delete/${currentUser._id}`, {
+        const res = await apiFetch(`/api/user/delete/${currentUser._id}`, {
           method: 'DELETE',
         });
         const data = await res.json();
@@ -78,7 +79,7 @@ const DashboardProfile = () => {
         profilePicture
       };
         console.log("Update profile data:", currentUser, updateProfile);
-      const res = await fetch(`https://trendsphere-5.onrender.com/api/user/update/${currentUser._id}`, {
+      const res = await apiFetch(`/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +103,7 @@ const DashboardProfile = () => {
   };
   const handleSignout = async () => {
     try {
-      const res = await fetch('https://trendsphere-5.onrender.com/api/user/signout', {
+      const res = await apiFetch('/api/user/signout', {
         method: 'POST',
       });
       console.log(res);

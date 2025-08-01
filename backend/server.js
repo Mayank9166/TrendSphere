@@ -12,8 +12,8 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: [ "https://classy-cranachan-b7b469.netlify.app/"],
-  
+  origin: ['http://localhost:5173','https://trendsphere-5.onrender.com'],
+  credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());

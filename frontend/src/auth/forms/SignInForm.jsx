@@ -19,6 +19,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInstart, signInSuccess } from '@/redux/user/userSlice';
 import GoogleAuth from '@/components/shared/GoogleAuth';
+import { apiFetch } from '@/config/api';
 const formSchema = z.object({
  
   email: z.string().email({ message: "Invalid email address" }),
@@ -41,8 +42,8 @@ const SignInForm = () => {
  async function onSubmit(values) {
   try {
     dispatch(signInstart());
-
-    const res = await fetch("https://trendsphere-5.onrender.com/api/auth/signin", {
+     console.log(values);
+    const res = await apiFetch("/api/auth/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values)

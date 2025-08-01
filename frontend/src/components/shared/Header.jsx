@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from 'sonner';
 import { signoutSuccess } from '@/redux/user/userSlice';
+import { apiFetch } from '@/config/api';
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);
@@ -33,23 +34,20 @@ const Header = () => {
   },[location.search])
   const handleSignout = async () => {
      try {
-       const res = await fetch('https://trendsphere-5.onrender.com/api/user/signout', {
+       const res = await apiFetch('/api/user/signout', {
          method: 'POST',
+         credentials: 'include'
        });
        const data = await res.json();
-       console.log("Signout response:", data);
        if (!res.ok) {
          console.error("Signout failed:", data.message);
-       }
-       else{
+       } else {
          dispatch(signoutSuccess());
-      // Redirect to home page after signout
        }
-     }
-       catch (error) {
+     } catch (error) {
          console.error("Error signing out:", error);
-       }
-     };
+     }
+};
 const handleSubmit = async(e)=>{
 e.preventDefault();
 const urlParams = new URLSearchParams(location.search);
@@ -129,4 +127,4 @@ navigate(`/search?${searchQuery}`);
   );
 };
 
-export default Header;  
+export default Header;

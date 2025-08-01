@@ -4,20 +4,21 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, Book } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { apiFetch } from '@/config/api'
 
 const Home = () => {
   const [posts,setPosts]=useState([]);
   // console.log(post);
   useEffect(()=>{
-    const fetchPosts = async ()=>{
-        try {
-          const res = await fetch("https://trendsphere-5.onrender.com/api/post/getposts?limit=6")
-          const data =await res.json();
-          if(res.ok)
-          setPosts(data.posts);
-        } catch (error) {
-          console.log(error.message);
-        }
+    const fetchPosts = async () => {
+      try {
+        const res = await apiFetch("/api/post/getposts?limit=6")
+        const data =await res.json();
+        if(res.ok)
+        setPosts(data.posts);
+      } catch (error) {
+        console.log(error.message);
+      }
     }
     fetchPosts();
   },[])

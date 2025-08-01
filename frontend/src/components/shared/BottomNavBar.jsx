@@ -4,13 +4,14 @@ import { FaHome, FaSignOutAlt, FaUserAlt } from 'react-icons/fa'
 import { IoIosCreate, IoIosDocument } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
+import { apiFetch } from '@/config/api';
 
 const BottomNavBar = () => {
    const {currentUser} = useSelector((state)=>state.user)
   const dispatch = useDispatch();
    const handleSignout = async () => {
     try {
-      const res = await fetch('https://trendsphere-5.onrender.com/api/user/signout', {
+      const res = await apiFetch('/api/user/signout', {
         method: 'POST',
       });
       const data = await res.json();

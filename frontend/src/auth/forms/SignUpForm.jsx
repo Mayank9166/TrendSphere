@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleAuth from '@/components/shared/GoogleAuth';
+import { apiFetch } from '@/config/api';
 const formSchema = z.object({
   username: z.string().min(2, { message: "Username must be at least 2 characters" }),
   email: z.string().email({ message: "Invalid email address" }),
@@ -39,7 +40,7 @@ const SignUpForm = () => {
     try {
       setloading(true)
       seterrorMessage(null)
-      const res = await fetch("https://trendsphere-5.onrender.com/api/auth/signup",{
+      const res = await apiFetch("/api/auth/signup",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify(values)

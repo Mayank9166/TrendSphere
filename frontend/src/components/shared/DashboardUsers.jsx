@@ -24,6 +24,7 @@ import {
 import { FaCheck } from "react-icons/fa";
 
 import { RxCross2 } from "react-icons/rx";
+import { apiFetch } from '@/config/api';
 const DashboardUsers = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [users, setUsers] = React.useState([]);
@@ -33,7 +34,7 @@ const DashboardUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`https://trendsphere-5.onrender.com/api/user/getusers`);
+        const res = await apiFetch('/api/user/getusers');
         const data = await res.json();
         if (res.ok) {
           setUsers(data.users);
@@ -52,9 +53,7 @@ const DashboardUsers = () => {
   const handleShowMore = async () => {
     const startIndex = users.length;
     try {
-      const res = await fetch(
-        `https://trendsphere-5.onrender.com/api/user/getusers?startIndex=${startIndex}`
-      );
+      const res = await apiFetch(`/api/user/getusers?startIndex=${startIndex}`);
       // console.log("Response:", res);
       const data = await res.json();
       if (res.ok) {
@@ -69,7 +68,7 @@ const DashboardUsers = () => {
   };
     const handleDelete = async ()=>{
            try {
-            const res = await fetch(`https://trendsphere-5.onrender.com/api/user/delete/${userIdtoDelete}`,{method:"DELETE"})
+            const res = await apiFetch(`/api/user/delete/${userIdtoDelete}`,{method:"DELETE"})
               const data = await res.json();
               if(res.ok)
               {

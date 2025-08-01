@@ -5,27 +5,26 @@ import { IoIosCreate, IoIosDocument } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { signoutSuccess } from '@/redux/user/userSlice';
 import { MdDashboardCustomize } from "react-icons/md";
+import { apiFetch } from '@/config/api';
 const DashboardSidebar = () => {
    const dispatch = useDispatch();
     const {currentUser} = useSelector((state)=>state.user)
     const handleSignout = async () => {
     try {
-      const res = await fetch('https://trendsphere-5.onrender.com/api/user/signout', {
+      const res = await apiFetch('/api/user/signout', {
         method: 'POST',
+        credentials: 'include'
       });
       const data = await res.json();
-      console.log("Signout response:", data);
       if (!res.ok) {
         console.error("Signout failed:", data.message);
-      }
-      else{
+      } else {
         dispatch(signoutSuccess());
       }
-    }
-      catch (error) {
+    } catch (error) {
         console.error("Error signing out:", error);
-      }
     }
+};
   return (
   <aside className='h-screen w-64 bg-slate-200 flex flex-col '>
       {/* Header */}

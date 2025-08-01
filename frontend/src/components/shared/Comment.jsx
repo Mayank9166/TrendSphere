@@ -5,6 +5,7 @@ import { AiFillLike } from 'react-icons/ai';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
+import { apiFetch } from '@/config/api';
 
 const Comment = ({ comment, onLike, onEdit,onDelete }) => {
   const [user, setUser] = useState({});
@@ -15,7 +16,7 @@ const Comment = ({ comment, onLike, onEdit,onDelete }) => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await fetch(`https://trendsphere-5.onrender.com/api/user/${comment.userId}`);
+        const res = await apiFetch(`/api/user/${comment.userId}`);
         const data = await res.json();
         if (res.ok) {
           setUser(data);
@@ -29,7 +30,7 @@ const Comment = ({ comment, onLike, onEdit,onDelete }) => {
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`/api/comment/editComment/${comment._id}`, {
+      const res = await apiFetch(`/api/comment/editComment/${comment._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

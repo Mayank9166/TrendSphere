@@ -5,6 +5,7 @@ import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
 import Comment from './Comment';
+import { apiFetch } from '@/config/api';
 
 const CommentSection = ({ postId }) => {
   const { currentUser } = useSelector((state) => state.user);
@@ -19,7 +20,7 @@ const CommentSection = ({ postId }) => {
       return;
     }
     try {
-      const res = await fetch('https://trendsphere-5.onrender.com/api/comment/create', {
+      const res = await apiFetch('/api/comment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -43,7 +44,7 @@ const CommentSection = ({ postId }) => {
   useEffect(() => {
     const getComments = async () => {
       try {
-        const res = await fetch(`/api/comment/getPostComments/${postId}`);
+        const res = await apiFetch(`/api/comment/getPostComments/${postId}`);
         if (res.ok) {
           const data = await res.json();
           setAllComments(data);
@@ -62,7 +63,7 @@ const CommentSection = ({ postId }) => {
         return;
       }
 
-      const res = await fetch(`/api/comment/likecomment/${commentId}`, {
+      const res = await apiFetch(`/api/comment/likecomment/${commentId}`, {
         method: 'PUT',
       });
 
@@ -100,7 +101,7 @@ const CommentSection = ({ postId }) => {
         navigate("/sign-in")
         return;
        }
-       const res = await fetch(`/api/comment/deletecomment/${commentId}`,{
+       const res = await apiFetch(`/api/comment/deletecomment/${commentId}`,{
         method:"DELETE",
        })
        if(res.ok)

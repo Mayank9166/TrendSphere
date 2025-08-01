@@ -17,6 +17,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { apiFetch } from '@/config/api';
 
 const EditPost = () => {
   const { postId } = useParams();
@@ -31,6 +32,7 @@ const EditPost = () => {
     image: '',
     _id: ''
   });
+  
   const [uploadImageError, setUploadImageError] = useState(null);
   const [imageUploading, setImageUploading] = useState(false);
   const [updatePostError, setUpdatePostError] = useState(null);
@@ -39,7 +41,7 @@ const EditPost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`https://trendsphere-5.onrender.com/api/post/getposts?postId=${postId}`);
+        const res = await apiFetch(`/api/post/getposts?postId=${postId}`);
         const data = await res.json();
 
         if (!res.ok) {
@@ -93,10 +95,8 @@ const EditPost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await fetch(
-        `https://trendsphere-5.onrender.com/api/post/updatepost/${formData._id}/${currentUser._id}`,
+      const res = await apiFetch(`/api/post/updatepost/${formData._id}/${currentUser._id}`,
         {
           method: 'PUT',
           headers: {

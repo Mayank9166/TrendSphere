@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { apiFetch } from '@/config/api';
 
 const MainDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -31,7 +32,7 @@ const MainDashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch("https://trendsphere-5.onrender.com/api/user/getusers?limit=5");
+        const res = await apiFetch("/api/user/getusers?limit=5");
         const data = await res.text();
         if (res.ok) {
           setUsers(data.users);
@@ -45,7 +46,7 @@ const MainDashboard = () => {
 
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`https://trendsphere-5.onrender.com/api/post/getposts?limit=5`);
+        const res = await apiFetch('/api/post/getposts?limit=5');
         const data = await res.json();
         if (res.ok) {
           setPosts(data.posts);
@@ -59,7 +60,7 @@ const MainDashboard = () => {
 
     const fetchComments = async () => {
       try {
-        const res = await fetch(`https://trendsphere-5.onrender.com/api/comment/getcomments?limit=5`);
+        const res = await apiFetch('/api/comment/getcomments?limit=5');
         const data = await res.json();
         console.log(data);
         if (res.ok) {

@@ -17,6 +17,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import { useNavigate } from 'react-router-dom';
+import { apiFetch } from '@/config/api';
 const Createpost = () => {
   const [file, setFile] = React.useState(null);
   const [formData, setFormData] = React.useState({});
@@ -53,7 +54,7 @@ const Createpost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); 
     try {
-      const res = await fetch ('https://trendsphere-5.onrender.com/api/post/create', {
+      const res = await apiFetch('/api/post/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

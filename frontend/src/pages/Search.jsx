@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Separator } from '@/components/ui/separator';
 import PostCard from '@/components/shared/PostCard';
 import { IoMdReturnLeft } from 'react-icons/io';
+import { apiFetch } from '@/config/api';
 
 const Search = () => {
     const [sidebarData,setSidebarData]=useState({
@@ -43,10 +44,10 @@ const Search = () => {
                 category:categoryFromUrl||""
             })
         }
-        const fetchPosts = async ()=>{
+        const fetchPosts = async () => {
             setLoading(true);
             const searchQuery = urlParams.toString();
-            const res = await fetch(`https://trendsphere-5.onrender.com/api/post/getposts?${searchQuery}`);
+            const res = await apiFetch(`/api/post/getposts?${searchQuery}`);
             if(!res.ok)
             {
                 setLoading(false);
@@ -93,7 +94,7 @@ const Search = () => {
         const urlParams = new URLSearchParams(location.search);
         urlParams.set("startIndex",startIndex);
         const searchQuery = urlParams.toString();
-        const res = await fetch(`https://trendsphere-5.onrender.com/api/post/getposts?${searchQuery}`);
+        const res = await apiFetch(`/api/post/getposts?${searchQuery}`);
         if(!res.ok)
         {
             return;
