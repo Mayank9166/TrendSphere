@@ -40,13 +40,20 @@ const SignUpForm = () => {
     try {
       setloading(true)
       seterrorMessage(null)
+      
+      console.log("Form values being sent:", values);
+      
       const res = await apiFetch("/api/auth/signup",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify(values)
       })
      
+      console.log("Response status:", res.status);
+      console.log("Response ok:", res.ok);
+      
       const data = await res.json();
+      console.log("Response data:", data);
       
       if(!res.ok) {
         setloading(false)
