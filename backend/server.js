@@ -61,6 +61,38 @@ app.get("/api/test", (req, res) => {
   res.status(200).json({ success: true, message: "Backend is working properly" });
 });
 
+// Debug route to check all registered routes
+app.get("/api/routes", (req, res) => {
+  const routes = [];
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      routes.push({
+        path: middleware.route.path,
+        methods: Object.keys(middleware.route.methods)
+      });
+    } else if (middleware.name === 'router') {
+      middleware.handle.stack.forEach((handler) => {
+        if (handler.route) {
+          routes.push({
+            path: handler.route.path,
+            methods: Object.keys(handler.route.methods)
+          });
+        }
+      });
+    }
+  });
+  res.json({ routes });
+});
+
+// Catch-all route for debugging
+app.use("*", (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found`,
+    method: req.method
+  });
+});
+
 // Error handling middleware (✔️ Fixed)
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
