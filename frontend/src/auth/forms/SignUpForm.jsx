@@ -46,20 +46,22 @@ const SignUpForm = () => {
         body:JSON.stringify(values)
       })
      
-      if(res && data.success === false)
-        {
-        const data = await res.text();
+      const data = await res.json();
+      
+      if(!res.ok) {
         setloading(false)
-        toast("This username or email is already taken. Try another")
-       return  seterrorMessage(data.message)
+        toast("Signup failed. Please try again.")
+        seterrorMessage(data.message || "Signup failed")
+        return
       }
-      if(res.ok)
-      {
+      
+      if(data.success) {
         setloading(false)
-        toast("Sigup Successfully")
+        toast("Signup Successfully")
         navigate("/sign-in")
       }
     } catch (error) {
+      console.error("Signup error:", error);
       seterrorMessage(error.message);
       setloading(false);
       toast("Something went wrong");

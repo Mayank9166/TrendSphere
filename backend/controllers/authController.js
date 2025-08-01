@@ -6,23 +6,41 @@ import 'dotenv/config';
 
 // Signup Controller
 export const signup = async (req, res, next) => {
-  const { username, email, password } = req.body;
-
-  if (!username || !email || !password || username === "" || email === "" || password === "") {
-    return next(errorHandler(400, "All fields are required"));
-  }
-
-  const hashPassword = bcryptjs.hashSync(password, 10);
-  const newUser = new User({
-    username,
-    email,
-    password: hashPassword
-  });
-
   try {
+    console.log("Signup request body:", req.body);
+    
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password || username === "" || email === "" || password === "") {
+      console.log("Validation failed - missing fields");
+      return next(errorHandler(400, "All fields are required"));
+    }
+
+    console.log("Creating new user with:", { username, email });
+
+    const hashPassword = bcryptjs.hashSync(password, 10);
+    const newUser = new User({
+      username,
+      email,
+      password: hashPassword
+    });
+
+    console.log("Saving user to database...");
     await newUser.save();
+    console.log("User saved successfully");
+    
     res.status(200).json({ success: true, message: "Signup Successfully" });
   } catch (error) {
+    console.error("Signup error:", error);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+    
+    // Handle specific MongoDB errors
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      return next(errorHandler(400, `${field} already exists`));
+    }
+    
     next(error);
   }
 };

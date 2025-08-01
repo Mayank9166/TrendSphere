@@ -61,6 +61,32 @@ app.get("/api/test", (req, res) => {
   res.status(200).json({ success: true, message: "Backend is working properly" });
 });
 
+// Database test route
+app.get("/api/test-db", async (req, res) => {
+  try {
+    const dbState = mongoose.connection.readyState;
+    const states = {
+      0: 'disconnected',
+      1: 'connected',
+      2: 'connecting',
+      3: 'disconnecting'
+    };
+    
+    res.status(200).json({ 
+      success: true, 
+      message: "Database connection test",
+      dbState: states[dbState],
+      readyState: dbState
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: "Database test failed",
+      error: error.message 
+    });
+  }
+});
+
 // Debug route to check all registered routes
 app.get("/api/routes", (req, res) => {
   const routes = [];
@@ -98,9 +124,18 @@ app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
 
+  console.error("Error details:", {
+    statusCode,
+    message,
+    stack: err.stack,
+    url: req.url,
+    method: req.method
+  });
+
   res.status(statusCode).json({
     success: false,
     message,
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   });
 });
 
