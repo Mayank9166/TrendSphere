@@ -115,13 +115,18 @@ export const google = async (req, res, next) => {
       Math.random().toString(36).slice(-8) +
       Math.random().toString(36).slice(-8);
     const hashPassword = bcryptjs.hashSync(generatedPassword, 10);
+    
+    // Handle profile image: use Google image if provided, otherwise use default
+    const defaultProfileImage = "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=";
+    const userProfileImage = profilePhotoUrl && profilePhotoUrl.trim() !== "" ? profilePhotoUrl : defaultProfileImage;
+    
     const newUser = new User({
       username:
         name.toLowerCase().split(" ").join("") +
         Math.random().toString(9).slice(-4),
       email,
       password: hashPassword,
-      profilePhotoUrl,
+      profilePhotoUrl: userProfileImage,
     });
 
     await newUser.save();

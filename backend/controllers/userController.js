@@ -36,8 +36,21 @@ export const updateUser = async (req, res, next) => {
 
     // Add other optional fields
     if (req.body.email) updateFields.email = req.body.email;
-    // console.log("hamara",req.body);
-    if (req.body.profilePicture) updateFields.profilePhotoUrl = req.body.profilePicture;
+    
+    // Handle profile image update
+    if (req.body.profilePicture) {
+      // Validate that it's a valid URL
+      try {
+        const url = new URL(req.body.profilePicture);
+        if (url.protocol === 'http:' || url.protocol === 'https:') {
+          updateFields.profilePhotoUrl = req.body.profilePicture;
+        } else {
+          return next(errorHandler(400, "Invalid image URL!"));
+        }
+      } catch (error) {
+        return next(errorHandler(400, "Invalid image URL format!"));
+      }
+    }
 
     // Update the user
     
