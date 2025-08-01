@@ -64,6 +64,22 @@ app.get("/api/test", (req, res) => {
   res.status(200).json({ success: true, message: "Backend is working properly" });
 });
 
+// Cookie test route
+app.get("/api/test-cookies", (req, res) => {
+  console.log('=== COOKIE TEST ===');
+  console.log('All cookies:', req.cookies);
+  console.log('Access token:', req.cookies.access_token);
+  console.log('Headers:', req.headers);
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Cookie test",
+    cookies: req.cookies,
+    hasAccessToken: !!req.cookies.access_token,
+    headers: req.headers
+  });
+});
+
 // Database test route
 app.get("/api/test-db", async (req, res) => {
   try {
