@@ -17,6 +17,12 @@ const GoogleAuth = () => {
     provider.setCustomParameters({prompt: 'select_account'});
     try {
       const firebaseResponse = await signInWithPopup(auth, provider);
+      console.log("Firebase user data:", {
+        displayName: firebaseResponse.user.displayName,
+        email: firebaseResponse.user.email,
+        photoURL: firebaseResponse.user.photoURL
+      });
+      
       const res = await apiFetch(`/api/auth/google`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -27,17 +33,20 @@ const GoogleAuth = () => {
           profilePhotoUrl: firebaseResponse.user.photoURL
         })
       });
-      const data = await res.text();
-      console.log(data);
-     if(res.ok)
-     {
-       dispatch(signInSuccess(data));
-       navigate("/");
-     }
-     
+      
+      const data = await res.json();
+      console.log("Google auth response:", data);
+      
+      if(res.ok) {
+        console.log("User data being dispatched:", data.user);
+        dispatch(signInSuccess(data.user));
+        navigate("/");
+      } else {
+        console.error("Google auth failed:", data.message);
+      }
      
   } catch (error) {
-    console.log(error)
+    console.error("Google auth error:", error);
   }  
   }
   return (

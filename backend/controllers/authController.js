@@ -89,16 +89,20 @@ export const signin = async (req, res, next) => {
 // Google Auth Controller
 export const google = async (req, res, next) => {
   const { email, name, profilePhotoUrl } = req.body;
+  
+  console.log("Google auth request:", { email, name, profilePhotoUrl });
 
   try {
     let user = await User.findOne({ email });
 
     if (user) {
+      console.log("Existing user found:", user.username);
       const token = jwt.sign(
         { id: user._id, isAdmin: user.isAdmin },
         process.env.JWT_SECRET
       );
       const { password: pass, ...rest } = user._doc;
+      console.log("Returning existing user data:", rest);
       return res
         .status(200)
         .cookie("access_token", token, { 
@@ -120,6 +124,8 @@ export const google = async (req, res, next) => {
     const defaultProfileImage = "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=";
     const userProfileImage = profilePhotoUrl && profilePhotoUrl.trim() !== "" ? profilePhotoUrl : defaultProfileImage;
     
+    console.log("Creating new user with profile image:", userProfileImage);
+    
     const newUser = new User({
       username:
         name.toLowerCase().split(" ").join("") +
@@ -130,6 +136,7 @@ export const google = async (req, res, next) => {
     });
 
     await newUser.save();
+    console.log("New user created:", newUser.username);
 
     const token = jwt.sign(
       { id: newUser._id, isAdmin: newUser.isAdmin },
@@ -137,6 +144,7 @@ export const google = async (req, res, next) => {
     );
 
     const { password: pass, ...rest } = newUser._doc;
+    console.log("Returning new user data:", rest);
 
     return res
       .status(200)
