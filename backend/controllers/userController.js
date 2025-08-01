@@ -65,8 +65,6 @@ export const deleteUser = async (req, res, next) => {
   
     await User.findByIdAndDelete(req.params.userId);
     res.status(200).json({ message: "User deleted successfully" });
-    
-    res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     next(error);
   }
@@ -87,7 +85,7 @@ export const signout = async (req,res,next) => {
 
 export const getUsers = async (req,res,next) =>{
      if(!req.user.isAdmin)
-      return next(errorHandler("You are not authorized to access this resource!"))
+      return next(errorHandler(403, "You are not authorized to access this resource!"))
     try {
       const startIndex = parseInt(req.query.startIndex)||0;
       const limit = parseInt(req.query.limit)||9;
@@ -96,7 +94,7 @@ export const getUsers = async (req,res,next) =>{
       const users = await User.find().sort({createdAt:sortDirection}).skip(startIndex).limit(limit);
       const getUsersWithoutPassword = users.map((user)=>{
         const {password:pass,...rest}=user._doc;
-        return user;
+        return rest;
       })
       const totalUsers = await User.countDocuments();
           
