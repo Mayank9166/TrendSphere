@@ -76,7 +76,7 @@ export const signin = async (req, res, next) => {
       .status(200)
       .cookie("access_token", token, { 
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "lax",
         secure: true,
         path: "/",
         maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -109,7 +109,7 @@ export const google = async (req, res, next) => {
         .status(200)
         .cookie("access_token", token, { 
           httpOnly: true,
-          sameSite: "none",
+          sameSite: "lax",
           secure: true,
           path: "/",
           maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -153,7 +153,7 @@ export const google = async (req, res, next) => {
       .status(200)
       .cookie("access_token", token, { 
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "lax",
         secure: true,
         path: "/",
         maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -197,7 +197,7 @@ export const refreshToken = async (req, res, next) => {
         .status(200)
         .cookie("access_token", newToken, { 
           httpOnly: true,
-          sameSite: "none",
+          sameSite: "lax",
           secure: true,
           path: "/",
           maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days

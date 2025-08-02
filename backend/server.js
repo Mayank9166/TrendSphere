@@ -23,12 +23,18 @@ app.use(cors({
       'https://trendsphere-first.onrender.com',
       'https://trendsphere-first.onrender.com/',
       'https://trendsphere-second.onrender.com',
+      'https://trendsphere-second.onrender.com/',
+      'https://trendsphere-second.onrender.com',
       'https://trendsphere-second.onrender.com/'
     ];
     
     console.log('CORS check for origin:', origin);
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Allow all origins in production for now
+    if (process.env.NODE_ENV === 'production') {
+      console.log('Production mode - allowing all origins');
+      callback(null, true);
+    } else if (allowedOrigins.indexOf(origin) !== -1) {
       console.log('CORS allowed for origin:', origin);
       callback(null, true);
     } else {
@@ -67,6 +73,32 @@ app.get("/api/test", (req, res) => {
   res.status(200).json({ success: true, message: "Backend is working properly" });
 });
 
+// Simple admin test route (no auth required)
+app.get("/api/test-admin-simple", (req, res) => {
+  res.status(200).json({ 
+    success: true, 
+    message: "Admin test route is working",
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Cookie test route with set cookie
+app.get("/api/test-cookie-set", (req, res) => {
+  res.cookie("test_cookie", "test_value", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: true,
+    path: "/",
+    maxAge: 60 * 60 * 1000 // 1 hour
+  });
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Test cookie set",
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Cookie test route
 app.get("/api/test-cookies", (req, res) => {
   console.log('=== COOKIE TEST ===');
@@ -88,6 +120,23 @@ app.get("/api/test-auth", verifyToken, (req, res) => {
   res.status(200).json({ 
     success: true, 
     message: "Authentication working",
+    user: req.user
+  });
+});
+
+// Admin test route
+app.get("/api/test-admin", verifyToken, (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(403).json({
+      success: false,
+      message: "You are not an admin",
+      user: req.user
+    });
+  }
+  
+  res.status(200).json({ 
+    success: true, 
+    message: "Admin access confirmed",
     user: req.user
   });
 });

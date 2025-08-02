@@ -87,7 +87,7 @@ export const signout = async (req,res,next) => {
     try {
        res.clearCookie("access_token", {
          httpOnly: true,
-         sameSite: "none",
+         sameSite: "lax",
          secure: true,
          path: "/"
        }).status(200).json({ message: "User has been logged out successfully" });
@@ -98,8 +98,17 @@ export const signout = async (req,res,next) => {
 }
 
 export const getUsers = async (req,res,next) =>{
-     if(!req.user.isAdmin)
-      return next(errorHandler(403, "You are not authorized to access this resource!"))
+     console.log('=== GET USERS DEBUG ===');
+     console.log('req.user:', req.user);
+     console.log('req.user.isAdmin:', req.user?.isAdmin);
+     console.log('req.user.id:', req.user?.id);
+     
+     if(!req.user.isAdmin) {
+       console.log('❌ User is not admin');
+       return next(errorHandler(403, "You are not authorized to access this resource!"))
+     }
+     
+     console.log('✅ User is admin, proceeding...');
     try {
       const startIndex = parseInt(req.query.startIndex)||0;
       const limit = parseInt(req.query.limit)||9;
@@ -139,3 +148,56 @@ export const getUserbyId = async(req,res,next)=>{
     next(error);
   }
 }
+
+// Make user admin (for testing purposes)
+export const makeUserAdmin = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+    
+    user.isAdmin = true;
+    await user.save();
+    
+    const { password: pass, ...rest } = user._doc;
+    res.status(200).json({ 
+      success: true, 
+      message: "User made admin successfully",
+      user: rest 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Check current user status
+export const checkUserStatus = async (req, res, next) => {
+  try {
+    console.log('=== CHECK USER STATUS ===');
+    console.log('req.user:', req.user);
+    console.log('req.user.isAdmin:', req.user?.isAdmin);
+    console.log('req.user.id:', req.user?.id);
+    
+    if (!req.user) {
+      return next(errorHandler(401, "No user found"));
+    }
+    
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+    
+    const { password: pass, ...rest } = user._doc;
+    res.status(200).json({ 
+      success: true, 
+      user: rest,
+      isAdmin: user.isAdmin,
+      message: user.isAdmin ? "User is admin" : "User is not admin"
+    });
+  } catch (error) {
+    next(error);
+  }
+};

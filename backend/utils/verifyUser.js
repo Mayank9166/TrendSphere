@@ -6,6 +6,7 @@ export const verifyToken = (req, res, next) => {
    console.log('=== VERIFY TOKEN DEBUG ===');
    console.log('Request URL:', req.url);
    console.log('Request method:', req.method);
+   console.log('Origin:', req.headers.origin);
    console.log('All cookies:', req.cookies);
    console.log('Cookie names:', Object.keys(req.cookies || {}));
    console.log('Authorization header:', req.headers.authorization);
@@ -50,7 +51,7 @@ export const verifyToken = (req, res, next) => {
                // Set new cookie
                res.cookie("access_token", newToken, { 
                    httpOnly: true,
-                   sameSite: "none",
+                   sameSite: "lax",
                    secure: true,
                    path: "/",
                    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days

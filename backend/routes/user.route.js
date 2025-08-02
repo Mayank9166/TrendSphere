@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteUser, getUserbyId, getUsers, signout, updateUser } from '../controllers/userController.js';
+import { deleteUser, getUserbyId, getUsers, signout, updateUser, makeUserAdmin, checkUserStatus } from '../controllers/userController.js';
 import { verifyToken } from '../utils/verifyUser.js';
 
 const router = express.Router();
@@ -9,5 +9,7 @@ router.delete("/delete/:userId", verifyToken, deleteUser);
 router.post("/signout",signout);
 router.get("/getusers",verifyToken,getUsers);
 router.get("/:userId",getUserbyId);
+router.put("/make-admin/:userId", makeUserAdmin); // No auth required for testing
+router.get("/check-status", verifyToken, checkUserStatus);
 
 export default router;
