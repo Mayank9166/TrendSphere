@@ -66,7 +66,8 @@ export const signin = async (req, res, next) => {
 
     const token = jwt.sign(
       { id: validUser._id, isAdmin: validUser.isAdmin },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
     );
 
     const { password: pass, ...rest } = validUser._doc;
@@ -77,7 +78,8 @@ export const signin = async (req, res, next) => {
         httpOnly: true,
         sameSite: "none",
         secure: true,
-        path: "/"
+        path: "/",
+        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
       })
       .json({ success: true, user: rest });
   } catch (error) {
@@ -98,7 +100,8 @@ export const google = async (req, res, next) => {
       console.log("Existing user found:", user.username);
       const token = jwt.sign(
         { id: user._id, isAdmin: user.isAdmin },
-        process.env.JWT_SECRET
+        process.env.JWT_SECRET,
+        { expiresIn: '30d' }
       );
       const { password: pass, ...rest } = user._doc;
       console.log("Returning existing user data:", rest);
@@ -108,7 +111,8 @@ export const google = async (req, res, next) => {
           httpOnly: true,
           sameSite: "none",
           secure: true,
-          path: "/"
+          path: "/",
+          maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         })
         .json({ success: true, user: rest });
     }
@@ -138,7 +142,8 @@ export const google = async (req, res, next) => {
 
     const token = jwt.sign(
       { id: newUser._id, isAdmin: newUser.isAdmin },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
     );
 
     const { password: pass, ...rest } = newUser._doc;
@@ -150,9 +155,55 @@ export const google = async (req, res, next) => {
         httpOnly: true,
         sameSite: "none",
         secure: true,
-        path: "/"
+        path: "/",
+        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
       })
       .json({ success: true, user: rest });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Refresh Token Controller
+export const refreshToken = async (req, res, next) => {
+  try {
+    const token = req.cookies.access_token;
+    
+    if (!token) {
+      return next(errorHandler(401, "No token provided"));
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return next(errorHandler(403, "Token is not valid"));
+      }
+
+      // Find user to ensure they still exist
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        return next(errorHandler(404, "User not found"));
+      }
+
+      // Generate new token
+      const newToken = jwt.sign(
+        { id: user._id, isAdmin: user.isAdmin },
+        process.env.JWT_SECRET,
+        { expiresIn: '30d' }
+      );
+
+      const { password: pass, ...rest } = user._doc;
+
+      return res
+        .status(200)
+        .cookie("access_token", newToken, { 
+          httpOnly: true,
+          sameSite: "none",
+          secure: true,
+          path: "/",
+          maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        })
+        .json({ success: true, user: rest });
+    });
   } catch (error) {
     next(error);
   }

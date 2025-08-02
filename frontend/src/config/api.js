@@ -14,3 +14,22 @@ export const apiFetch = (endpoint, options = {}) => {
     credentials: 'include', // Add credentials for cookies
   });
 };
+
+// Token refresh utility
+export const refreshTokenIfNeeded = async () => {
+  try {
+    const response = await apiFetch('/api/auth/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Token refreshed successfully');
+      return data.user;
+    }
+  } catch (error) {
+    console.log('Token refresh failed:', error);
+  }
+  return null;
+};

@@ -19,6 +19,7 @@ import PostDetails from './pages/PostDetails.jsx'
 import ScrollToTop from './components/shared/ScrollToTop.jsx'
 import Search from './pages/Search.jsx'
 import NewsArticle from './pages/NewsArticle'
+import TokenRefresh from './components/shared/TokenRefresh.jsx'
 
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
    <BrowserRouter>
    <Header/>
    <ScrollToTop/>
+   <TokenRefresh/>
    <Routes>
     <Route path='/sign-up' element={<SignUpForm/>}/>
     <Route path='/sign-in' element={< SignInForm/>}/>
