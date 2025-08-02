@@ -33,7 +33,7 @@ const MainDashboard = () => {
     const fetchUsers = async () => {
       try {
         const res = await apiFetch("/api/user/getusers?limit=5");
-        const data = await res.text();
+        const data = await res.json();
         if (res.ok) {
           setUsers(data.users);
           setTotalUsers(data.totalUsers);
@@ -135,18 +135,26 @@ const MainDashboard = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user._id}>
-                  <TableCell>
-                    <img
-                      src={user.profilePhotoUrl}
-                      alt={user.name}
-                      className="w-10 h-10 object-cover bg-gray-200 rounded-full"
-                    />
+              {users && users.length > 0 ? (
+                users.map((user) => (
+                  <TableRow key={user._id}>
+                    <TableCell>
+                      <img
+                        src={user.profilePhotoUrl}
+                        alt={user.name}
+                        className="w-10 h-10 object-cover bg-gray-200 rounded-full"
+                      />
+                    </TableCell>
+                    <TableCell>{user.username}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={2} className="text-center text-gray-500">
+                    No users found
                   </TableCell>
-                  <TableCell>{user.username}</TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>
@@ -168,14 +176,22 @@ const MainDashboard = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {comments.map((comment) => (
-                <TableRow key={comment._id}>
-                  <TableCell>
-                    <p className="line-clamp-2">{comment.content}</p>
+              {comments && comments.length > 0 ? (
+                comments.map((comment) => (
+                  <TableRow key={comment._id}>
+                    <TableCell>
+                      <p className="line-clamp-2">{comment.content}</p>
+                    </TableCell>
+                    <TableCell>{comment.numberOfLikes}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={2} className="text-center text-gray-500">
+                    No comments found
                   </TableCell>
-                  <TableCell>{comment.numberOfLikes}</TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>
@@ -198,23 +214,31 @@ const MainDashboard = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {posts.map((post) => (
-                <TableRow key={post._id}>
-                  <TableCell>
-                    <img
-                      src={post.image}
-                      alt="post"
-                      className="w-10 h-10 object-cover bg-gray-200 rounded-full"
-                    />
-                  </TableCell>
-                  <TableCell className="line-clamp-1 max-w-[200px]">
-                    {post.title}
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap w-auto">
-                    {post.category}
+              {posts && posts.length > 0 ? (
+                posts.map((post) => (
+                  <TableRow key={post._id}>
+                    <TableCell>
+                      <img
+                        src={post.image}
+                        alt="post"
+                        className="w-10 h-10 object-cover bg-gray-200 rounded-full"
+                      />
+                    </TableCell>
+                    <TableCell className="line-clamp-1 max-w-[200px]">
+                      {post.title}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap w-auto">
+                      {post.category}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center text-gray-500">
+                    No posts found
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>
