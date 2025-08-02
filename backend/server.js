@@ -82,6 +82,37 @@ app.get("/api/test-admin-simple", (req, res) => {
   });
 });
 
+// Make first user admin (for testing)
+app.get("/api/make-first-user-admin", async (req, res) => {
+  try {
+    const User = (await import('./models/userModel.js')).default;
+    const firstUser = await User.findOne();
+    
+    if (!firstUser) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "No users found" 
+      });
+    }
+    
+    firstUser.isAdmin = true;
+    await firstUser.save();
+    
+    const { password: pass, ...rest } = firstUser._doc;
+    res.status(200).json({ 
+      success: true, 
+      message: "First user made admin successfully",
+      user: rest
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: "Error making user admin",
+      error: error.message 
+    });
+  }
+});
+
 // Cookie test route with set cookie
 app.get("/api/test-cookie-set", (req, res) => {
   res.cookie("test_cookie", "test_value", {

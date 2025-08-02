@@ -87,7 +87,7 @@ export const signout = async (req,res,next) => {
     try {
        res.clearCookie("access_token", {
          httpOnly: true,
-         sameSite: "lax",
+         sameSite: "none",
          secure: true,
          path: "/"
        }).status(200).json({ message: "User has been logged out successfully" });
@@ -103,38 +103,53 @@ export const getUsers = async (req,res,next) =>{
      console.log('req.user.isAdmin:', req.user?.isAdmin);
      console.log('req.user.id:', req.user?.id);
      
-     if(!req.user.isAdmin) {
-       console.log('❌ User is not admin');
-       return next(errorHandler(403, "You are not authorized to access this resource!"))
+     // If user is admin, return all users
+     if(req.user.isAdmin) {
+       console.log('✅ User is admin, returning all users');
+       try {
+         const startIndex = parseInt(req.query.startIndex)||0;
+         const limit = parseInt(req.query.limit)||9;
+         const sortDirection = req.query.sort === "asc"?1:-1;
+
+         const users = await User.find().sort({createdAt:sortDirection}).skip(startIndex).limit(limit);
+         const getUsersWithoutPassword = users.map((user)=>{
+           const {password:pass,...rest}=user._doc;
+           return rest;
+         })
+         const totalUsers = await User.countDocuments();
+             
+         const now = new Date();
+         const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+         const lastMonthUsers = await User.countDocuments({
+           createdAt:{$gte:oneMonthAgo},
+         })
+         res.status(200).json({
+           users:getUsersWithoutPassword,
+           totalUsers,
+           lastMonthUsers
+         })
+       } catch (error) {
+         next(error);
+       }
+     } else {
+       // If user is not admin, return only their own profile
+       console.log('✅ User is not admin, returning own profile');
+       try {
+         const user = await User.findById(req.user.id);
+         if (!user) {
+           return next(errorHandler(404, "User not found"));
+         }
+         
+         const { password: pass, ...rest } = user._doc;
+         res.status(200).json({
+           users: [rest],
+           totalUsers: 1,
+           lastMonthUsers: 1
+         });
+       } catch (error) {
+         next(error);
+       }
      }
-     
-     console.log('✅ User is admin, proceeding...');
-    try {
-      const startIndex = parseInt(req.query.startIndex)||0;
-      const limit = parseInt(req.query.limit)||9;
-      const sortDirection = req.query.sort === "asc"?1:-1;
-
-      const users = await User.find().sort({createdAt:sortDirection}).skip(startIndex).limit(limit);
-      const getUsersWithoutPassword = users.map((user)=>{
-        const {password:pass,...rest}=user._doc;
-        return rest;
-      })
-      const totalUsers = await User.countDocuments();
-          
-    const now = new Date();
-    const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-    const lastMonthUsers = await User.countDocuments({
-      createdAt:{$gte:oneMonthAgo},
-    })
-    res.status(200).json({
-      users:getUsersWithoutPassword,
-      totalUsers,
-      lastMonthUsers
-    })
-
-    } catch (error) {
-      next(error);
-    }
 }
 
 export const getUserbyId = async(req,res,next)=>{

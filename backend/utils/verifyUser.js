@@ -51,7 +51,7 @@ export const verifyToken = (req, res, next) => {
                // Set new cookie
                res.cookie("access_token", newToken, { 
                    httpOnly: true,
-                   sameSite: "lax",
+                   sameSite: "none",
                    secure: true,
                    path: "/",
                    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
