@@ -216,3 +216,51 @@ export const checkUserStatus = async (req, res, next) => {
     next(error);
   }
 };
+
+// Force refresh user token with latest database data
+export const forceRefreshToken = async (req, res, next) => {
+  try {
+    console.log('=== FORCE REFRESH TOKEN ===');
+    console.log('req.user:', req.user);
+    
+    if (!req.user) {
+      return next(errorHandler(401, "No user found"));
+    }
+    
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+    
+    console.log('🔍 Database user isAdmin:', user.isAdmin);
+    console.log('🔍 JWT Token isAdmin:', req.user.isAdmin);
+    
+    // Generate new token with latest database data
+    const jwt = (await import('jsonwebtoken')).default;
+    const newToken = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
+    );
+    
+    const { password: pass, ...rest } = user._doc;
+    
+    return res
+      .status(200)
+      .cookie("access_token", newToken, { 
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        path: "/",
+        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+      })
+      .json({ 
+        success: true, 
+        message: "Token refreshed with latest data",
+        user: rest,
+        isAdmin: user.isAdmin
+      });
+  } catch (error) {
+    next(error);
+  }
+};

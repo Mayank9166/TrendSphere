@@ -113,6 +113,34 @@ app.get("/api/make-first-user-admin", async (req, res) => {
   }
 });
 
+// Check user admin status in database
+app.get("/api/check-user-admin/:userId", async (req, res) => {
+  try {
+    const User = (await import('./models/userModel.js')).default;
+    const user = await User.findById(req.params.userId);
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found" 
+      });
+    }
+    
+    const { password: pass, ...rest } = user._doc;
+    res.status(200).json({ 
+      success: true, 
+      user: rest,
+      isAdmin: user.isAdmin
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: "Error checking user admin status",
+      error: error.message 
+    });
+  }
+});
+
 // Cookie test route with set cookie
 app.get("/api/test-cookie-set", (req, res) => {
   res.cookie("test_cookie", "test_value", {
