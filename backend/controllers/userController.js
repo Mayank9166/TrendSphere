@@ -89,7 +89,6 @@ export const signout = async (req,res,next) => {
          httpOnly: true,
          sameSite: "none",
          secure: true,
-         domain: ".onrender.com",
          path: "/"
        }).status(200).json({ message: "User has been logged out successfully" });
 

@@ -7,6 +7,7 @@ import postRoutes from './routes/post.route.js';
 import commentRoutes from "./routes/comment.route.js"
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { verifyToken } from './utils/verifyUser.js';
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use(cors({
     const allowedOrigins = [
       'http://localhost:5173',
       'http://localhost:5174', 
+      'https://trendsphere-first.onrender.com',
+      'https://trendsphere-first.onrender.com/',
       'https://trendsphere-second.onrender.com',
       'https://trendsphere-second.onrender.com/'
     ];
@@ -35,7 +38,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Cookie']
 }));
 
 // Handle preflight requests
@@ -77,6 +80,15 @@ app.get("/api/test-cookies", (req, res) => {
     cookies: req.cookies,
     hasAccessToken: !!req.cookies.access_token,
     headers: req.headers
+  });
+});
+
+// Auth test route
+app.get("/api/test-auth", verifyToken, (req, res) => {
+  res.status(200).json({ 
+    success: true, 
+    message: "Authentication working",
+    user: req.user
   });
 });
 

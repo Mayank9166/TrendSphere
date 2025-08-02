@@ -77,7 +77,6 @@ export const signin = async (req, res, next) => {
         httpOnly: true,
         sameSite: "none",
         secure: true,
-        domain: ".onrender.com",
         path: "/"
       })
       .json({ success: true, user: rest });
@@ -109,7 +108,6 @@ export const google = async (req, res, next) => {
           httpOnly: true,
           sameSite: "none",
           secure: true,
-          domain: ".onrender.com",
           path: "/"
         })
         .json({ success: true, user: rest });
@@ -152,7 +150,6 @@ export const google = async (req, res, next) => {
         httpOnly: true,
         sameSite: "none",
         secure: true,
-        domain: ".onrender.com",
         path: "/"
       })
       .json({ success: true, user: rest });
